@@ -1,4 +1,3 @@
-import { unstable_next } from "scheduler";
 import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 
