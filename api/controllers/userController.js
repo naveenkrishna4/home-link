@@ -27,3 +27,16 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteUser = async (req, res, next) => {
+  if (req.user.id != req.params.id)
+    return next(errorHandler(401, "User not authenticated"));
+  try {
+    const del = await User.findByIdAndDelete(req.params.id);
+    if (del) {
+      res.clearCookie().status(200).json("User deleted successfully");
+    }
+  } catch (err) {
+    next(err);
+  }
+};
