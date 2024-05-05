@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { createDispatchHook, useSelector } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import {
   getDownloadURL,
@@ -15,6 +15,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signoutFailure,
+  signoutSuccess,
+  signoutStart,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 
@@ -120,6 +123,21 @@ export default function Profile() {
     }
   };
 
+  const handleSignout = async () => {
+    try {
+      dispatch(signoutStart());
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signoutFailure(data.message));
+        return;
+      }
+      dispatch(signoutSuccess(data));
+    } catch (err) {
+      dispatch(signoutFailure(err.message));
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -189,7 +207,9 @@ export default function Profile() {
         <span onClick={handleDelete} className="cursor-pointer text-red-500">
           Delete Account
         </span>
-        <span className="cursor-pointer text-red-500">Signout</span>
+        <span onClick={handleSignout} className="cursor-pointer text-red-500">
+          Signout
+        </span>
       </div>
       <p className="mt-5 text-red-700">{error ? error : ""}</p>
       <p className="mt-5 text-green-700">
