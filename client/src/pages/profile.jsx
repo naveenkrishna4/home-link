@@ -20,6 +20,7 @@ import {
   signoutStart,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 //firebase storage
 //rules_version = '2';
@@ -202,7 +203,15 @@ export default function Profile() {
         >
           {loading ? "loading..." : "update"}
         </button>
+        <Link
+          to={"/createListing"}
+          diasbled={error}
+          className="text-white p-3 rounded-lg uppercase text-center hover:opacity-95 disabled:opacity-80 bg-green-700"
+        >
+          create listing
+        </Link>
       </form>
+
       <div className="flex justify-between mt-4">
         <span onClick={handleDelete} className="cursor-pointer text-red-500">
           Delete Account
