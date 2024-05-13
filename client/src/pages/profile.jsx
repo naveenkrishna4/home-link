@@ -46,6 +46,8 @@ export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [updateSuccess, setUpdateSucess] = useState(false);
   const [formData, setFormData] = useState({});
+  const [showListingErr, setShowListingErr] = useState(false);
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -139,6 +141,25 @@ export default function Profile() {
     }
   };
 
+  const handleShowLisitings = async () => {
+    try {
+      setShowListingErr(false);
+      const res = await fetch(`api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingErr(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingErr(true);
+    }
+  };
+
+  useEffect(() => {
+    console.log(userListings);
+  }, [userListings]);
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -211,7 +232,6 @@ export default function Profile() {
           create listing
         </Link>
       </form>
-
       <div className="flex justify-between mt-4">
         <span onClick={handleDelete} className="cursor-pointer text-red-500">
           Delete Account
@@ -224,6 +244,43 @@ export default function Profile() {
       <p className="mt-5 text-green-700">
         {updateSuccess ? "User updated successfully!" : ""}
       </p>
+      <button onClick={handleShowLisitings} className="text-green-700 w-full ">
+        Show Listings
+      </button>
+      <p>{showListingErr ? "Error showing listings" : ""}</p>
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7  text-2xl text-semibold">
+            Your Listings
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border mt-5 p-3 border-black rounded-lg flex gap-4 items-center justify-between"
+            >
+              <Link
+                className="flex items-center gap-5 text-slate-700 hover:underline font-semibold truncate"
+                to={`/listing/${listing._id}`}
+              >
+                <img
+                  src={listing.images[0]}
+                  className="h-16 w-16 object-contain"
+                  alt="image"
+                ></img>
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col gap-3 mt-2 items-center ">
+                <button className="p-1 border-black text-green-700 uppercase  border">
+                  Edit
+                </button>
+                <button className="p-1 border-black  text-red-700 uppercase border">
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
