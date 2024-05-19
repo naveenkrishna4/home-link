@@ -156,6 +156,26 @@ export default function Profile() {
     }
   };
 
+  const handleDeleteListing = async (listingid) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingid}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => {
+          listing._id != listingid;
+        })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     console.log(userListings);
   }, [userListings]);
@@ -273,7 +293,12 @@ export default function Profile() {
                 <button className="p-1 border-black text-green-700 uppercase  border">
                   Edit
                 </button>
-                <button className="p-1 border-black  text-red-700 uppercase border">
+                <button
+                  onClick={() => {
+                    handleDeleteListing(listing._id);
+                  }}
+                  className="p-1 border-black  text-red-700 uppercase border"
+                >
                   Delete
                 </button>
               </div>
