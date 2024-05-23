@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Contact from "../components/contact";
 import "swiper/css/bundle";
 import {
   FaBath,
@@ -15,6 +17,10 @@ export default function Listing() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [contact, setContact] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -38,6 +44,35 @@ export default function Listing() {
     fetchListing();
   }, [params.listingId]);
 
+  const handleLike = async () => {
+    try {
+      setLoading(true);
+      const updatedListing = { ...listing };
+      updatedListing.likes = liked
+        ? updatedListing.likes - 1
+        : updatedListing.likes + 1;
+      setLiked(!liked);
+
+      const res = await fetch(`/api/listing/updateLike/${params.listingId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedListing),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setError(true);
+        setLoading(false);
+        return;
+      }
+      setListing(data);
+      setLoading(false);
+      setError(false);
+    } catch (err) {
+      setError(true);
+      setLoading(false);
+    }
+  };
+
   return (
     <main>
       {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
@@ -47,7 +82,7 @@ export default function Listing() {
       {listing && !error && !loading && (
         <div>
           <div className="flex flex-wrap justify-center">
-            {listing.images.map((url, index) => (
+            {listing.images?.map((url, index) => (
               <img
                 src={url}
                 className=" w-1/3 m-3 mt-3"
@@ -57,17 +92,34 @@ export default function Listing() {
             ))}
           </div>
           <div className="fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer">
-            <FaShare className="text-slate-500" />
+            <FaShare
+              className="text-slate-500"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+                setTimeout(() => {
+                  setCopied(false);
+                }, 5000);
+              }}
+            />
           </div>
-          <div className="flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4">
+          {copied && (
+            <p className="fixed top-[23%] right-[5%] z-10 rounded-md bg-slate-100 p-2">
+              Link copied!
+            </p>
+          )}
+          <div className="flex flex-col max-w-4xl mx-auto p-3 my-5 gap-4">
             <p className="text-2xl font-semibold">
-              {listing.name} - ${" "}
-              {listing.offer
-                ? listing.discountPrice.toLocaleString("en-US")
-                : listing.regularPrice.toLocaleString("en-US")}
+              {listing.name} - $
+              {
+                listing.offer
+                  ? listing.discountPrice?.toLocaleString("en-US") // Optional chaining here
+                  : listing.regularPrice?.toLocaleString("en-US") // Optional chaining here
+              }
               {listing.type === "rent" && " / month"}
             </p>
-            <p className="flex items-center mt-6 gap-2 text-slate-600  text-sm">
+
+            <p className="flex items-center mt-3 gap-2 text-slate-600  text-sm">
               <FaMapMarkerAlt className="text-green-700" />
               {listing.address}
             </p>
@@ -108,6 +160,24 @@ export default function Listing() {
               </li>
             </ul>
             <p className="font-semibold">Likes - {listing.likes}</p>
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
+              <div>
+                <button
+                  onClick={handleLike}
+                  className="border rounded-lg p-2 border-black"
+                >
+                  {liked ? "Dislike" : "Like"}
+                </button>
+                <br></br>
+                <button
+                  onClick={() => setContact(true)}
+                  className="bg-slate-700 hover:opacity-80 text-white p-3 uppercase rounded-lg mt-5 "
+                >
+                  I'm Interested
+                </button>
+              </div>
+            )}
+            {contact && <Contact listing={listing} />}
           </div>
         </div>
       )}
