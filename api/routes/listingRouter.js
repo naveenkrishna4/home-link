@@ -6,6 +6,7 @@ import {
   updateListing,
   getListing,
   updateLike,
+  getListings,
 } from "../controllers/listingController.js";
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.delete("/delete/:id", verifyUser, deleteListing);
 router.post("/update/:id", verifyUser, updateListing);
 router.post("/updatelike/:id", updateLike);
 router.get("/get/:id", getListing);
+router.get("/get", getListings);
 
 export default router;
