@@ -61,7 +61,8 @@ export default function Home() {
           Let's get started...
         </Link>
       </div>
-      <div className="max-w-6xl mx-auto p-3 flex flex-col  gap-8 ">
+
+      <div className="mx-14 p-3 flex flex-col gap-8 my-5 ">
         {offerlisting && offerlisting.length > 0 && (
           <div>
             <div className="my-3">
