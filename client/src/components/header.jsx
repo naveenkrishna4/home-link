@@ -17,7 +17,7 @@ export default function Header() {
 
   useEffect(() => {
     const url = new URLSearchParams(location.search);
-    const searchTermForUrl = url.get("searchTerm");
+    const searchTermForUrl = url.get("searchTerm") || "";
     setSearchTerm(searchTermForUrl);
   }, [location.search]);
 

@@ -55,7 +55,7 @@ export default function Home() {
           <br></br>
         </div>
         <Link
-          to={"/serach"}
+          to={"/search"}
           className="text-blue-800 font-bold hover:underline text-xl"
         >
           Let's get started...
