@@ -6,12 +6,13 @@ export default function Home() {
   const [offerlisting, getOfferlisting] = useState([]);
   const [salelisting, getSalelisting] = useState([]);
   const [rentlisting, getRentlisting] = useState([]);
-  console.log(offerlisting);
 
   useEffect(() => {
     const fecthofferListing = async () => {
       try {
-        const res = await fetch(`/api/listing/get?offer=true&limit=4`);
+        const res = await fetch(
+          `/api/listing/get?offer=yes&type=both&parking=both&furnished=both&limit=4`
+        );
         const data = await res.json();
         getOfferlisting(data);
         fetchrentListing();
@@ -22,7 +23,9 @@ export default function Home() {
 
     const fetchrentListing = async () => {
       try {
-        const res = await fetch(`/api/listing/get?type=rent&limit=4`);
+        const res = await fetch(
+          `/api/listing/get?type=rent&parking=both&furnished=both&offer=both&limit=4`
+        );
         const data = await res.json();
         getRentlisting(data);
         fetchsaleListing();
@@ -33,14 +36,15 @@ export default function Home() {
 
     const fetchsaleListing = async () => {
       try {
-        const res = await fetch(`/api/listing/get?type=sale&limit=4`);
+        const res = await fetch(
+          `/api/listing/get?type=sale&parking=both&furnished=both&offer=both&limit=4`
+        );
         const data = await res.json();
         getSalelisting(data);
       } catch (err) {
         console.log(err.message);
       }
     };
-
     fecthofferListing();
   }, []);
 
