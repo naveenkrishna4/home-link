@@ -8,10 +8,10 @@ export default function search() {
   const [listings, setListings] = useState([]);
   const [sidebardata, setSidebardata] = useState({
     searchTerm: "",
-    type: "all",
-    parking: false,
-    furnished: false,
-    offer: false,
+    type: "both",
+    parking: "both",
+    furnished: "both",
+    offer: "both",
     sort: "created_at",
     order: "desc",
   });
@@ -37,10 +37,30 @@ export default function search() {
     ) {
       setSidebardata({
         searchTerm: searchTermFromUrl || "",
-        type: typeFromUrl || "all",
-        parking: parkingFromUrl === "true" ? true : false,
-        furnished: furnishedFromUrl === "true" ? true : false,
-        offer: offerFromUrl === "true" ? true : false,
+        type:
+          typeFromUrl === "both"
+            ? "both"
+            : typeFromUrl === "rent"
+            ? "rent"
+            : "sale",
+        parking:
+          parkingFromUrl === "both"
+            ? "both"
+            : parkingFromUrl === "yes"
+            ? "yes"
+            : "no",
+        furnished:
+          furnishedFromUrl === "both"
+            ? "both"
+            : furnishedFromUrl === "yes"
+            ? "yes"
+            : "no",
+        offer:
+          offerFromUrl === "both"
+            ? "both"
+            : offerFromUrl === "yes"
+            ? "yes"
+            : "no",
         sort: sortFromUrl || "created_at",
         order: orderFromUrl || "desc",
       });
@@ -58,25 +78,18 @@ export default function search() {
   }, [location.search]);
 
   const handleChange = async (e) => {
-    if (
-      e.target.id === "all" ||
-      e.target.id === "rent" ||
-      e.target.id === "sale"
-    ) {
-      setSidebardata({ ...sidebardata, type: e.target.id });
-    }
     if (e.target.id === "searchTerm") {
       setSidebardata({ ...sidebardata, searchTerm: e.target.value });
     }
     if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
+      e.target.name === "parking" ||
+      e.target.name === "furnished" ||
+      e.target.name === "offer" ||
+      e.target.name === "type"
     ) {
       setSidebardata({
         ...sidebardata,
-        [e.target.id]:
-          e.target.checked || e.target.checked === "true" ? true : false,
+        [e.target.name]: e.target.id,
       });
     }
     if (e.target.id === "sort_order") {
@@ -101,7 +114,7 @@ export default function search() {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
+      <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen w-1/2">
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap">Search Term : </label>
@@ -116,17 +129,6 @@ export default function search() {
           </div>
           <div className="flex gap-4 flex-wrap items-center">
             <label>Type:</label>
-            <div className="flex gap-1">
-              <input
-                type="radio"
-                id="all"
-                name="type"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebardata.type === "all"}
-              ></input>
-              <span className="">Rent & Sale</span>
-            </div>
             <div className="flex gap-1">
               <input
                 type="radio"
@@ -151,38 +153,125 @@ export default function search() {
             </div>
             <div className="flex gap-1">
               <input
-                type="checkbox"
-                id="offer"
+                type="radio"
+                id="both"
+                name="type"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.offer}
+                checked={sidebardata.type === "both"}
               ></input>
-              <span className="">Offer</span>
+              <span className="">Both</span>
             </div>
           </div>
           <div className="flex gap-4 flex-wrap items-center">
-            <label>Ammenities:</label>
+            <label>Offer:</label>
             <div className="flex gap-1">
               <input
-                type="checkbox"
-                id="parking"
+                type="radio"
+                id="yes"
+                name="offer"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.parking}
+                checked={sidebardata.offer === "yes"}
               ></input>
-              <span className="">Parking</span>
+              <span className="">Yes </span>
             </div>
             <div className="flex gap-1">
               <input
-                type="checkbox"
-                id="furnished"
+                type="radio"
+                id="no"
+                name="offer"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.furnished}
+                checked={sidebardata.offer === "no"}
               ></input>
-              <span className="">Furnished</span>
+              <span className="">No</span>
+            </div>
+            <div className="flex gap-1">
+              <input
+                type="radio"
+                id="both"
+                name="offer"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebardata.offer === "both"}
+              ></input>
+              <span className="">Both</span>
             </div>
           </div>
+          <div className="flex gap-4 flex-wrap items-center">
+            <label>Parking:</label>
+            <div className="flex gap-1">
+              <input
+                type="radio"
+                id="yes"
+                name="parking"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebardata.parking === "yes"}
+              ></input>
+              <span className="">Yes </span>
+            </div>
+            <div className="flex gap-1">
+              <input
+                type="radio"
+                id="no"
+                name="parking"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebardata.parking === "no"}
+              ></input>
+              <span className="">No</span>
+            </div>
+            <div className="flex gap-1">
+              <input
+                type="radio"
+                id="both"
+                name="parking"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebardata.parking === "both"}
+              ></input>
+              <span className="">Both</span>
+            </div>
+          </div>
+          <div className="flex gap-4 flex-wrap items-center">
+            <label>Furnished:</label>
+            <div className="flex gap-1">
+              <input
+                type="radio"
+                id="yes"
+                name="furnished"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebardata.furnished === "yes"}
+              ></input>
+              <span className="">Yes</span>
+            </div>
+            <div className="flex gap-1">
+              <input
+                type="radio"
+                id="no"
+                name="furnished"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebardata.furnished === "no"}
+              ></input>
+              <span className="">No</span>
+            </div>
+            <div className="flex gap-1">
+              <input
+                type="radio"
+                id="both"
+                name="furnished"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebardata.furnished === "both"}
+              ></input>
+              <span className="">Both</span>
+            </div>
+          </div>
+
           <div className="flex gap-4 flex-wrap items-center">
             <label>Sort:</label>
             <select
@@ -203,10 +292,10 @@ export default function search() {
         </form>
       </div>
       <div className="">
-        <h1 className="flex font-semibold p-3 border-b text-slate-700 text-3xl items-center mt-5 ">
+        <h1 className="flex font-semibold p-6 border-b-2 text-slate-700 text-3xl items-center ">
           Listing Reults:
         </h1>
-        <div className="flex flex-wrap gap-8 p-7 items-center">
+        <div className="flex flex-wrap gap-8 p-6 items-center">
           {!loading && listings.length === 0 && (
             <p className="text-xl text-slate-700">No listing found!</p>
           )}
