@@ -6,6 +6,7 @@ export default function search() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showmore, setShowmore] = useState(false);
   const [sidebardata, setSidebardata] = useState({
     searchTerm: "",
     type: "both",
@@ -70,6 +71,11 @@ export default function search() {
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
         const data = await res.json();
+        if (data.length > 8) {
+          setShowmore(true);
+        } else {
+          setShowmore(false);
+        }
         setListings(data);
         setLoading(false);
       };
@@ -112,9 +118,22 @@ export default function search() {
     navigate(`/search?${url.toString()}`);
   };
 
+  const onShowmoreClick = async () => {
+    const num = listings.length;
+    const urlParams = new URLSearchParams(location.search);
+    const startIndex = num;
+    urlParams.set("start", startIndex);
+    const res = await fetch(`/api/listing/get?${urlParams.toString()}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowmore(false);
+    }
+    setListings([...listings, ...data]);
+  };
+
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen w-1/2">
+      <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen w-2/3">
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap">Search Term : </label>
@@ -310,6 +329,14 @@ export default function search() {
             listings.map((listing) => (
               <Listingitem key={listing._id} listing={listing} />
             ))}
+          {showmore && (
+            <button
+              onClick={onShowmoreClick}
+              className=" text-green-700 hover:underline text-lg w-full"
+            >
+              Showmore
+            </button>
+          )}
         </div>
       </div>
     </div>
