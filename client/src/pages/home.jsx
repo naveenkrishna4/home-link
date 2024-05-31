@@ -60,12 +60,14 @@ export default function Home() {
         </div>
         <div className="text-lg py-5">
           <span className="text-gray-800 mr-2">Developed by -</span>
-          <Link
-            to={"https://github.com/naveenkrishna4"}
+          <a
+            href="https://github.com/naveenkrishna4"
             className="text-blue-600 underline hover:opacity-70"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Naveen Krishna P M
-          </Link>
+          </a>
         </div>
         <Link
           to={
