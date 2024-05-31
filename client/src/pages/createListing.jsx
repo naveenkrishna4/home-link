@@ -27,6 +27,7 @@ export default function createListing() {
     offer: false,
     parking: false,
     likes: 0,
+    likedIds: [],
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);

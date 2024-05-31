@@ -50,7 +50,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex flex-col gap-6 py-10 mt-5 px-3 max-w-6xl mx-auto">
+      <div className="flex flex-col gap-3 py-10 mt-5 px-3 max-w-6xl mx-auto">
         <h1 className="text-slate-700 font-bold text-6xl ">
           Find It! Love It!<br></br>Live It!
         </h1>
@@ -58,15 +58,25 @@ export default function Home() {
           HomeLink is the best place to find your next place to live.
           <br></br>
         </div>
+        <div className="text-lg py-5">
+          <span className="text-gray-800 mr-2">Developed by -</span>
+          <Link
+            to={"https://github.com/naveenkrishna4"}
+            className="text-blue-600 underline hover:opacity-70"
+          >
+            Naveen Krishna P M
+          </Link>
+        </div>
         <Link
-          to={"/search"}
-          className="text-blue-800 font-bold hover:underline text-xl"
+          to={
+            "/search?searchTerm=&type=both&parking=both&furnished=both&offer=both&sort=created_at&order=desc"
+          }
+          className="text-blue-900 font-bold hover:underline text-3xl"
         >
           Let's get started...
         </Link>
       </div>
-
-      <div className="mx-14 p-3 flex flex-col gap-8 my-5 ">
+      <div className="mx-14 px-3 flex flex-col gap-8 my-2 ">
         {offerlisting && offerlisting.length > 0 && (
           <div>
             <div className="my-3">

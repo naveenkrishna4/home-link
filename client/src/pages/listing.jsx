@@ -34,6 +34,11 @@ export default function Listing() {
           return;
         }
         setListing(data);
+        if (data.likedIds.includes(currentUser._id)) {
+          setLiked(true);
+        } else {
+          setLiked(false);
+        }
         setLoading(false);
         setError(false);
       } catch (error) {
@@ -42,7 +47,7 @@ export default function Listing() {
       }
     };
     fetchListing();
-  }, [params.listingId]);
+  }, [params.listingId, currentUser]);
 
   const handleLike = async () => {
     try {
@@ -51,8 +56,14 @@ export default function Listing() {
       updatedListing.likes = liked
         ? updatedListing.likes - 1
         : updatedListing.likes + 1;
+      if (!liked) {
+        updatedListing.likedIds.push(currentUser._id);
+      } else {
+        updatedListing.likedIds = updatedListing.likedIds.filter(
+          (id) => id !== currentUser._id
+        );
+      }
       setLiked(!liked);
-
       const res = await fetch(`/api/listing/updateLike/${params.listingId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,10 +72,9 @@ export default function Listing() {
       const data = await res.json();
       if (data.success === false) {
         setError(true);
-        setLoading(false);
-        return;
+      } else {
+        setListing(data);
       }
-      setListing(data);
       setLoading(false);
       setError(false);
     } catch (err) {
@@ -81,7 +91,7 @@ export default function Listing() {
       )}
       {listing && !error && !loading && (
         <div>
-          <div className="flex flex-wrap justify-center">
+          <div className="flex flex-wrap justify-center mt-5">
             {listing.images?.map((url, index) => (
               <img
                 src={url}
@@ -157,17 +167,17 @@ export default function Listing() {
             </ul>
             <p className="font-semibold">Likes - {listing.likes}</p>
             {currentUser && listing.userRef !== currentUser._id && !contact && (
-              <div>
+              <div className="flex flex-wrap gap-5 mt-3">
                 <button
                   onClick={handleLike}
-                  className="border rounded-lg p-2 border-black"
+                  className="border rounded-lg p-3 uppercase bg-gray-400 hover:opacity-80 "
                 >
                   {liked ? "Dislike" : "Like"}
                 </button>
                 <br></br>
                 <button
                   onClick={() => setContact(true)}
-                  className="bg-slate-700 hover:opacity-80 text-white p-3 uppercase rounded-lg mt-5 "
+                  className="bg-slate-700 text-white uppercase p-3 rounded-lg hover:opacity-80 "
                 >
                   I'm Interested
                 </button>

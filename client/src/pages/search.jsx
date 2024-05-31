@@ -134,7 +134,7 @@ export default function search() {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen ">
+      <div className="p-4 border-b-2 md:border-r-2 md:min-h-screen ">
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap">Search Term : </label>
@@ -147,7 +147,7 @@ export default function search() {
               onChange={handleChange}
             ></input>
           </div>
-          <div className="flex gap-4 flex-wrap items-center">
+          <div className="flex gap-3 flex-wrap items-center">
             <label>Type:</label>
             <div className="flex gap-1">
               <input
@@ -183,7 +183,7 @@ export default function search() {
               <span className="">Both</span>
             </div>
           </div>
-          <div className="flex gap-4 flex-wrap items-center">
+          <div className="flex gap-3 flex-wrap items-center">
             <label>Offer:</label>
             <div className="flex gap-1">
               <input
@@ -219,7 +219,7 @@ export default function search() {
               <span className="">Both</span>
             </div>
           </div>
-          <div className="flex gap-4 flex-wrap items-center">
+          <div className="flex gap-3 flex-wrap items-center">
             <label>Parking:</label>
             <div className="flex gap-1">
               <input
@@ -255,7 +255,7 @@ export default function search() {
               <span className="">Both</span>
             </div>
           </div>
-          <div className="flex gap-4 flex-wrap items-center">
+          <div className="flex gap-3 flex-wrap items-center">
             <label>Furnished:</label>
             <div className="flex gap-1">
               <input
@@ -291,7 +291,6 @@ export default function search() {
               <span className="">Both</span>
             </div>
           </div>
-
           <div className="flex gap-4 flex-wrap items-center">
             <label>Sort:</label>
             <select
@@ -311,11 +310,11 @@ export default function search() {
           </button>
         </form>
       </div>
-      <div className="">
-        <h1 className="flex font-semibold p-6 border-b-2 text-slate-700 text-3xl items-center ">
+      <div className="w-3/4 ">
+        <h1 className="flex font-semibold p-8 border-b-2 text-slate-700 text-3xl items-center ">
           Listing Reults:
         </h1>
-        <div className="flex flex-wrap gap-8 p-3 items-center">
+        <div className="flex flex-wrap gap-8 p-10 items-center">
           {!loading && listings.length === 0 && (
             <p className="text-xl text-slate-700">No listing found!</p>
           )}

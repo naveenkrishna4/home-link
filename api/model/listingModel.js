@@ -59,6 +59,10 @@ const listingmodel = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    likedIds: {
+      type: Array,
+      default: [],
+    },
   },
   {
     timestamps: true,

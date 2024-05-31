@@ -12,6 +12,13 @@ export default function Header() {
     e.preventDefault();
     const url = new URLSearchParams(window.location.search);
     url.set("searchTerm", searchTerm);
+    const typeFromUrl = url.get("type");
+    if (typeFromUrl === null) {
+      url.set("type", "both");
+      url.set("parking", "both");
+      url.set("furnished", "both");
+      url.set("offer", "both");
+    }
     navigate(`/search?${url.toString()}`);
   };
 
