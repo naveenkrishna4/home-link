@@ -49,8 +49,8 @@ export default function Listing() {
     fetchListing();
   }, [params.listingId, currentUser]);
 
-  const handleLike = async () => {
-    e.preventDefault();
+  const handleLike = async (e) => {
+    e.preventDeafult();
     try {
       setLoading(true);
       const updatedListing = { ...listing };
@@ -65,7 +65,7 @@ export default function Listing() {
         );
       }
       setLiked(!liked);
-      const res = await fetch(`/api/listing/updateLike/${params.listingId}`, {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedListing),
