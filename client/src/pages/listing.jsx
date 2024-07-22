@@ -49,8 +49,7 @@ export default function Listing() {
     fetchListing();
   }, [params.listingId, currentUser]);
 
-  const handleLike = async (e) => {
-    e.preventDeafult();
+  const handleLike = async () => {
     try {
       setLoading(true);
       const updatedListing = { ...listing };
