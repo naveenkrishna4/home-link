@@ -64,7 +64,7 @@ export default function Listing() {
         );
       }
       setLiked(!liked);
-      const res = await fetch(`/api/listing/update/${params.listingId}`, {
+      const res = await fetch(`/api/listing/updateLike/${params.listingId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedListing),
