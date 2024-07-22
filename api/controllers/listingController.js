@@ -44,24 +44,6 @@ export const updateListing = async (req, res, next) => {
   }
 };
 
-export const updateLike = async (req, res, next) => {
-  try {
-    const listing = await Listing.findById(req.params.id);
-    if (!listing) {
-      return res.status(404).json({ message: "Listing not found!" });
-    }
-    const updatedListing = await Listing.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    res.status(200).json(updatedListing);
-  } catch (error) {
-    console.error("Error updating like:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
 export const getListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
